@@ -2,6 +2,10 @@
 
 Boilerplate information: https://github.com/electron-react-boilerplate/electron-react-boilerplate
 
+## Preview
+
+![preview-latest](./resources/preview-latest.png 'Example')
+
 ### What (is this)?
 
 Docrider. (how did you even find this page if you didn't already know? Wait, who are you?)
