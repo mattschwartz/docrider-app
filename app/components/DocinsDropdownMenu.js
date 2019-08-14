@@ -1,6 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-import docinsMenuStyles from '../styles/docinsMenu.scss'
+import docinsMenuStyles from '../styles/docins/docinsMenu.scss'
+import * as docinsModule from '../actions/docinsModule'
 
 class DocinsDropdownMenu extends React.Component {
   constructor (props) {
@@ -35,9 +37,9 @@ class DocinsDropdownMenu extends React.Component {
 
         <div className={docinsMenuStyles.dropdownMenu}>
           <ul>
-            {this.renderToggleable('Outline', 'isOutlineDocinToggled')}
+            {this.renderOutlineDocinToggle()}
             {this.renderToggleable('Scenes', 'isScenesDocinToggled')}
-            {this.renderToggleable('Characters', 'isCharactersDocinToggled')}
+            {this.renderCharactersDocinToggle()}
             {this.renderToggleable(
               'Interactions',
               'isInteractionsDocinToggled'
@@ -50,6 +52,57 @@ class DocinsDropdownMenu extends React.Component {
           </ul>
         </div>
       </div>
+    )
+  }
+
+  renderCharactersDocinToggle () {
+    const {
+      isCharactersDocinVisible,
+      setCharactersDocinVisibility
+    } = this.props
+
+    let toggleIcon
+    if (isCharactersDocinVisible) {
+      toggleIcon = <i className='fas fa-toggle-on' />
+    } else {
+      toggleIcon = (
+        <i
+          className='fas fa-toggle-off'
+          style={{ color: 'rgba(0, 0, 0, 0.5)' }}
+        />
+      )
+    }
+
+    return (
+      <li
+        onClick={() => setCharactersDocinVisibility(!isCharactersDocinVisible)}
+      >
+        Characters
+        {toggleIcon}
+      </li>
+    )
+  }
+
+  renderOutlineDocinToggle () {
+    const { isOutlineDocinVisible, setOutlineDocinVisibility } = this.props
+
+    let toggleIcon
+    if (isOutlineDocinVisible) {
+      toggleIcon = <i className='fas fa-toggle-on' />
+    } else {
+      toggleIcon = (
+        <i
+          className='fas fa-toggle-off'
+          style={{ color: 'rgba(0, 0, 0, 0.5)' }}
+        />
+      )
+    }
+
+    return (
+      <li onClick={() => setOutlineDocinVisibility(!isOutlineDocinVisible)}>
+        Outline
+        {toggleIcon}
+      </li>
     )
   }
 
@@ -85,4 +138,15 @@ class DocinsDropdownMenu extends React.Component {
   }
 }
 
-export default DocinsDropdownMenu
+export default connect(
+  state => ({
+    isCharactersDocinVisible: state.docins.charactersDocin.isVisible,
+    isOutlineDocinVisible: state.docins.outlineDocin.isVisible
+  }),
+  dispatch => ({
+    setCharactersDocinVisibility: isVisible =>
+      dispatch(docinsModule.setCharactersDocinVisibility(isVisible)),
+    setOutlineDocinVisibility: isVisible =>
+      dispatch(docinsModule.setOutlineDocinVisibility(isVisible))
+  })
+)(DocinsDropdownMenu)

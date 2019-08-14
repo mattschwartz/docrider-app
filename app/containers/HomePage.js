@@ -1,10 +1,10 @@
 // @flow
+import { remote } from 'electron'
 import React, { Component } from 'react'
 import DocumentView from './DocumentView'
 
-import { remote } from 'electron'
-
 import homeStyles from '../styles/home.scss'
+import DocinsContainer from './DocinsContainer'
 
 type Props = {}
 
@@ -70,7 +70,11 @@ export default class HomePage extends Component<Props> {
             </div>
           </div>
         </div>
-        <DocumentView />
+
+        <div className={homeStyles.docContainer}>
+          <DocumentView />
+          <DocinsContainer />
+        </div>
       </>
     )
   }

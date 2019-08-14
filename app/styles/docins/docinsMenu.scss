@@ -27,12 +27,11 @@
     border: 1px solid #202020;
     outline: 0;
     cursor: pointer;
-    transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: background-position 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
   }
 
   &:hover {
-    background-color: #a1d449;
     background-color: #deb841;
   }
 
