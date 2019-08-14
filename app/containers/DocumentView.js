@@ -7,13 +7,7 @@ class DocumentView extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      docFile: {
-        filepath: './documents/rockin-files/docrider.dr',
-        fileSizeBytes: 1591,
-        isEdited: false
-      },
-      docFileStatus: 'changes pending',
-      isEditing: false
+      docFileStatus: 'changes pending'
     }
   }
 
@@ -32,15 +26,6 @@ class DocumentView extends React.Component {
           autoFocus
           contentEditable
         />
-
-        <div className={docriderStyle.docstats}>
-          File: {this.state.docFile.filepath}{' '}
-          {this.state.docFile.isEdited && <span>*</span>}
-          {this.state.isEditing && <span> [editing]</span>}
-          <span className={docriderStyle.fileStats}>
-            {this.state.docFile.fileSizeBytes} B
-          </span>
-        </div>
       </div>
     )
   }
@@ -68,13 +53,6 @@ class DocumentView extends React.Component {
     e.preventDefault()
     const text = (e.originalEvent || e).clipboardData.getData('Text')
     document.execCommand('insertHTML', true, text)
-    this.setState({
-      ...this.state,
-      docFile: {
-        ...this.state.docFile,
-        isEdited: true
-      }
-    })
   }
 
   handleKeyDown = (e: KeyboardEvent) => {
@@ -92,25 +70,11 @@ class DocumentView extends React.Component {
       }
 
       e.preventDefault()
-      this.setState({
-        ...this.state,
-        docFile: {
-          ...this.state.docFile,
-          isEdited: true
-        }
-      })
     }
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
     console.log('Pressy', String.fromCharCode(e.charCode))
-    this.setState({
-      ...this.state,
-      docFile: {
-        ...this.state.docFile,
-        isEdited: true
-      }
-    })
   }
 }
 

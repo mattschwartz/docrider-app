@@ -2,9 +2,10 @@
 import { remote } from 'electron'
 import React, { Component } from 'react'
 import DocumentView from './DocumentView'
+import DocinsContainer from './DocinsContainer'
+import DocriderStatsBar from '../components/DocriderStatsBar'
 
 import homeStyles from '../styles/home.scss'
-import DocinsContainer from './DocinsContainer'
 
 type Props = {}
 
@@ -75,6 +76,8 @@ export default class HomePage extends Component<Props> {
           <DocumentView />
           <DocinsContainer />
         </div>
+
+        <DocriderStatsBar />
       </>
     )
   }

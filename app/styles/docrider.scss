@@ -10,18 +10,7 @@
     background-color: #2d3047;
     color: #101010;
     position: relative;
-  }
-
-  .docstats {
-    background-color: #2d3047;
-    color: #deb841;
-    width: 100%;
-    padding: 0.25rem 0.25ch;
-    font-size: 0.8rem;
-
-    .fileStats {
-      float: right;
-    }
+    border-bottom: 1px solid black;
   }
 
   .btnGroup {
