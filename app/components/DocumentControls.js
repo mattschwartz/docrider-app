@@ -1,6 +1,7 @@
 import React from 'react'
 
 import docriderStyles from '../styles/docrider.scss'
+import DocinsDropdownMenu from './DocinsDropdownMenu'
 
 class DocumentControls extends React.Component {
   constructor (props) {
@@ -27,6 +28,7 @@ class DocumentControls extends React.Component {
             <i className='fas fa-folder-open' />
           </button>
         </div>
+        <DocinsDropdownMenu />
       </div>
     )
   }

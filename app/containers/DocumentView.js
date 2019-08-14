@@ -21,17 +21,17 @@ class DocumentView extends React.Component {
     return (
       <div className={docriderStyle.docrider}>
         <DocumentControls onSaveClicked={this.handleOnSave} />
-        <div className={docriderStyle.editorContainer}>
-          <textarea
-            className={docriderStyle.editable}
-            onKeyPress={this.handleKeyPress}
-            onKeyDown={this.handleKeyDown}
-            onPaste={this.handlePaste}
-            onFocus={this.handleOnFocus}
-            onBlur={this.handleOnBlur}
-            autoFocus
-          />
-        </div>
+        <div
+          role='textbox'
+          className={docriderStyle.editable}
+          onKeyPress={this.handleKeyPress}
+          onKeyDown={this.handleKeyDown}
+          onPaste={this.handlePaste}
+          onFocus={this.handleOnFocus}
+          onBlur={this.handleOnBlur}
+          autoFocus
+          contentEditable
+        />
 
         <div className={docriderStyle.docstats}>
           File: {this.state.docFile.filepath}{' '}

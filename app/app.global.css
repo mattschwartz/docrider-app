@@ -10,6 +10,7 @@ body {
   font-family: "Fira Code", "Menlo", "Consolas", "Courier New", Courier, monospace, monospace;
   font-weight: bolder;
   margin: 0;
+  user-select: none;
 }
 
 ::-webkit-scrollbar {
