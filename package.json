@@ -257,6 +257,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.5.0",
     "devtron": "^1.4.0",
+    "draft-js": "^0.11.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.2.3",

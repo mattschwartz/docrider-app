@@ -4,27 +4,21 @@ import docriderStyles from '../styles/docrider.scss'
 import DocinsDropdownMenu from './DocinsDropdownMenu'
 
 class DocumentControls extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      docFile: {
-        filepath: './documents/rockin-files/docrider.dr'
-      },
-      docFileStatus: 'changes pending'
-    }
-  }
-
   render () {
     return (
       <div className={docriderStyles.controlsContainer}>
-        <div className={docriderStyles.btnGroup}>
+        <div className={docriderStyles.btnGroup} title='New Narrative'>
           <button type='button'>
             <i className='fas fa-file-alt' />
           </button>
-          <button type='button' onClick={this.props.onSaveClicked}>
+          <button
+            type='button'
+            onClick={this.props.onSaveClicked}
+            title='Save Narrative'
+          >
             <i className='fas fa-save' />
           </button>
-          <button type='button'>
+          <button type='button' title='Open Narrative'>
             <i className='fas fa-folder-open' />
           </button>
         </div>

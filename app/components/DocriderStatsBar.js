@@ -17,13 +17,43 @@ class DocriderStatsBar extends React.Component {
   render () {
     return (
       <div className={styles.docstats}>
-        ┏━ {this.state.filepath}
+        {this.renderNarrativeStat()}
         {this.state.isEdited && <span> *</span>}
-        {this.state.isEditing && <span> [editing]</span>} ━┓
+        {this.state.isEditing && <span> [editing]</span>}
         <span className={styles.fileStats}>
-          ┏━ {this.state.currentAct} ━╥━ {this.state.currentScene} ━┓
+          {this.renderActStat()} {this.renderSceneStat()}
         </span>
       </div>
+    )
+  }
+
+  renderNarrativeStat () {
+    return (
+      <>
+        <span className={styles.narrativeStat} title='Switch Narrative'>
+          {this.state.filepath}
+        </span>
+      </>
+    )
+  }
+
+  renderActStat () {
+    return (
+      <>
+        <span className={styles.actStat} title='Switch Act'>
+          Act: {this.state.currentAct}
+        </span>
+      </>
+    )
+  }
+
+  renderSceneStat () {
+    return (
+      <>
+        <span className={styles.sceneStat} title='Switch Scene'>
+          Scene: {this.state.currentScene}
+        </span>
+      </>
     )
   }
 }

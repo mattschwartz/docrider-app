@@ -1,84 +1,94 @@
 .docriderBanner {
-  flex: 0;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-  background-image: url("../dist/banner-gradient.png");
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
-  z-index: 100;
-  padding-bottom: 0.5ch;
-  padding-top: 0.5ch;
-  -webkit-app-region: drag;
+    flex: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    background-image: url('../dist/banner-gradient.png');
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+    z-index: 100;
+    padding-bottom: 0.5ch;
+    padding-top: 0.5ch;
+    -webkit-app-region: drag;
+    border: 2px solid black;
+    border-bottom: none;
 
-  border: 2px solid black;
-  border-bottom: none;
-
-  .brand {
-    max-height: 2rem;
-    display: inline;
-    margin-left: 0.5ch;
-  }
-
-  h1 {
-    color: #101010f0;
-    position: absolute;
-    top: 0;
-    left: 4.5rem;
-    text-transform: uppercase;
-    text-align: right;
-    padding: 0;
-    margin: 0;
-    font-family: "VT323", monospace;
-    font-size: 2rem;
-    margin-right: 1ch;
-    transform: skewX(-10deg);
-  }
-
-  .windowControls {
-    -webkit-app-region: no-drag;
-    position: absolute;
-    right: 0.25ch;
-    top: 0.5ch;
-
-    .btnGroup {
-      button {
-        margin-right: 0.5ch;
-
-        background-color: #a88e84;
-        color: #000500;
-        outline: 0;
-        border: 1px solid #202020;
-        width: 2rem;
-        height: 2rem;
-
-        &:hover {
-          background-color: #deb841;
-        }
-
-        > i {
-          vertical-align: middle;
-        }
-      }
+    .brand {
+        max-height: 2rem;
+        display: inline;
+        margin-left: 0.5ch;
     }
-  }
+
+    h1 {
+        color: #101010f0;
+        position: absolute;
+        top: 0;
+        left: 4.5rem;
+        text-transform: uppercase;
+        text-align: right;
+        padding: 0;
+        margin: 0;
+        font-family: 'VT323', monospace;
+        font-size: 2rem;
+        margin-right: 1ch;
+        transform: skewX(-10deg);
+    }
+
+    .windowControls {
+        -webkit-app-region: no-drag;
+        position: absolute;
+        right: 0.25ch;
+        top: 0.5ch;
+
+        .btnGroup {
+            button {
+                margin-right: 0.5ch;
+                background-color: #a88e84;
+                color: #000500;
+                outline: 0;
+                border: 1px solid #202020;
+                width: 2rem;
+                height: 2rem;
+
+                &:hover {
+                    background-color: #deb841;
+                }
+
+                > i {
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
 }
 
 .docContainer {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
 }
 
 .docstats {
-  border-top: 1px solid black;
-  background-color: #2d3047;
-  color: #deb841;
-  width: 100%;
-  padding: 0.25rem 0.25ch;
-  font-size: 0.8rem;
+    border-top: 1px solid black;
+    background-color: #2d3047;
+    color: #deb841;
+    width: 100%;
+    padding: 0.25rem 0.25ch;
+    font-size: 0.8rem;
 
-  .fileStats {
-    float: right;
-  }
+    .narrativeStat,
+    .actStat,
+    .sceneStat {
+        padding: 0.5ch 1ch;
+        position: relative;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #404257;
+        }
+    }
+
+    .fileStats {
+        float: right;
+    }
 }
