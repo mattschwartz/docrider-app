@@ -1,9 +1,53 @@
 using DocriderParser.Tokens;
+using System.Collections.Generic;
 
 namespace DocriderParser
 {
     class Parser
     {
+        public List<TokenizedLine> TokenizeFile(CompilerLog log, string filetext)
+        {
+            filetext = filetext.Replace('\r', '\n');
+            string[] lines = filetext.Split('\n');
+
+            var result = new List<TokenizedLine>();
+
+            for (int lineNumber = 0; lineNumber < lines.Length; ++lineNumber)
+            {
+                string line = lines[lineNumber];
+
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    log.Debug(line, lineNumber, 0, "Skipping empty line");
+                }
+
+                if (line.TrimStart().StartsWith("#"))
+                {
+                    log.Debug(line, lineNumber, 0, "Skipping comment");
+                }
+
+                try
+                {
+                    SyntaxTree tree = Tokenize(line);
+
+                    result.Add(new TokenizedLine
+                    {
+                        Line = line,
+                        LineNumber = lineNumber,
+                        SyntaxTree = tree
+                    });
+
+                    log.Debug(line, lineNumber, 0, $"Success => {tree}");
+                }
+                catch (SyntaxParseException ex)
+                {
+                    log.Error(line, lineNumber, ex.Position, ex.Message);
+                }
+            }
+
+            return result;
+        }
+
         public SyntaxTree Tokenize(string line)
         {
             ValidateTokenizable(line);
