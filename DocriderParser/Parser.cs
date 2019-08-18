@@ -1,6 +1,7 @@
 using DocriderParser.Compilation;
 using DocriderParser.Tokens;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DocriderParser
 {
@@ -11,20 +12,18 @@ namespace DocriderParser
             filetext = filetext.Replace('\r', '\n');
             string[] lines = filetext.Split('\n');
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             var result = new List<TokenizedLine>();
 
             for (int lineNumber = 0; lineNumber < lines.Length; ++lineNumber)
             {
                 string line = lines[lineNumber];
 
-                if (string.IsNullOrWhiteSpace(line))
+                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
                 {
-                    log.Debug(line, lineNumber, 0, "Skipping empty line");
-                }
-
-                if (line.TrimStart().StartsWith("#"))
-                {
-                    log.Debug(line, lineNumber, 0, "Skipping comment");
+                    continue;
                 }
 
                 try
@@ -45,6 +44,9 @@ namespace DocriderParser
                     log.Error(line, lineNumber, ex.Position, ex.Message);
                 }
             }
+
+            sw.Stop();
+            log.ParseTime = sw.ElapsedMilliseconds;
 
             return result;
         }

@@ -1,0 +1,34 @@
+>> define narrative => worlds;
+>> define character => [Evelynn, James, Mara, Ada] ;
+>> define setting => [Ada’s kitchen];
+
+>> enter act => Act 1;
+>> enter scene with [James, Ada] => James and Ada talking in the kitchen;
+>> enter setting => Ada’s kitchen;
+
+>> alias => E, Evelynn;
+>> alias => J, James;
+>> alias => A, Ada;
+
+Ada heard the front door open and then shut after a short while. Her granddaughter’s voice could be made out from the kitchen.
+
+[A=“I wonder what private message took so long to discuss in there.”] Ada said teasingly. She placed the freshly lain biscuits in the oven. Their tea was still steaming in porcelein cups on a counter near James.
+
+[@J,A=“I don’t try to understand women,”] James said. [“You’re all too smart for me, anyhow.”] He said decidedly.
+
+[@A,J=“Oh, aren’t you just a dear.”] Ada smiled. [“Why don’t you bring that platter into the living room and talk with Evelynn about the little spat you two had yesterday. I’ll be sure to keep my eaves away from here.”] She wandered back behind the kitchen, apparently to prepare some laundry. But James did not notice that; he was still thinking on the fact that Evelynn told her grandmother about that. [^J=What even was that yesterday?] He thought. He walked into the living area.
+
+<< exit scene;
+
+>> enter scene with [Evelynn, James] => Evelynn and James talk;
+
+[@E,J=“James!”] Evelynn stood up, excitement and surprise in her voice. She ran over to him. [@E,J=“There’s so much to tell you! Sit”] She patted the seat next to her on the sofa. [^J,E=Her mood sure changed from yesterday], James thought.
+
+[@J,E=“Why did your grandmother mention our ‘spat’ to me?”] James asked.
+
+[@E,J=“Oh come on James.”] Evelynn said, a bit flustered. [“I’m sorry but she could tell I was upset about something”] she leaned in closer, [“and I didn’t want to mention what I read.”] She nodded behind her. 
+
+[@J,E=“Okay. That makes sense.”] James decided. [“What did you want to tell me?”] He set the tea platter down.
+
+<< exit scene;
+<< exit act;

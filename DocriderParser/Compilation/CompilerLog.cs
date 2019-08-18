@@ -39,6 +39,9 @@ namespace DocriderParser.Compilation
     {
         private readonly List<CompilerMessage> _messages = new List<CompilerMessage>();
 
+        public long ParseTime { get; set; }
+        public long CompileTime { get; set; }
+
         public List<CompilerMessage> GetMessages() =>
             _messages.ToList();
 

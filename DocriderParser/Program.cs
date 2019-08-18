@@ -1,31 +1,26 @@
 using DocriderParser.Compilation;
 using DocriderParser.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DocriderParser
 {
     class Program
     {
+        delegate void ShellCommand();
+
         static void Main(string[] args)
         {
             var parser = new Parser();
             var compiler = new Compiler(parser);
 
-            Console.Write("[0] Compile test file\n[1] Interactive parser\n[2] Enter doc line by line in console\n> ");
-            int choice = int.Parse(Console.ReadLine());
-
-            if (choice == 0)
+            var shellCommands = new Dictionary<string, ShellCommand>
             {
-                CompileFile("Docrider.dr");
-            }
-            else if (choice == 1)
-            {
-                Loopy(parser);
-            }
-            else if (choice == 2)
-            {
-                while (true)
+                ["Compile test file (simple)"] = () => CompileFile("Docrider.dr"),
+                ["Compile test file (complex)"] = () => CompileFile("Docrider_complex.dr"),
+                ["Interactive parser"] = () => Loopy(parser),
+                ["Interactive compiler"] = () =>
                 {
                     Console.WriteLine("Enter file text (empty line to stop):");
                     string fileText = EnterFileText();
@@ -33,7 +28,35 @@ namespace DocriderParser
 
                     PrettyPrintCompilerLog(log);
                 }
+            };
+
+            while (true)
+            {
+                PrintOptions(shellCommands);
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int choice))
+                {
+                    int i = 0;
+                    foreach (var key in shellCommands.Keys)
+                    {
+                        if (i++ == choice)
+                        {
+                            shellCommands[key]();
+                        }
+                    }
+                }
+                Console.WriteLine("\n");
             }
+        }
+
+        private static void PrintOptions(Dictionary<string, ShellCommand> commands)
+        {
+            int choiceNumber = 0;
+            foreach (var key in commands.Keys)
+            {
+                Console.Write($"[{choiceNumber++}] {key}\n");
+            }
+            Console.Write("\nEnter your decision> ");
         }
 
         private static void CompileFile(string filename)
@@ -44,6 +67,9 @@ namespace DocriderParser
             CompilerLog log = compiler.Compile(fileText);
 
             PrettyPrintCompilerLog(log);
+
+            Console.WriteLine($"Parser: {log.ParseTime}ms");
+            Console.WriteLine($"Compiler: {log.CompileTime}ms");
         }
 
         private static string EnterFileText()

@@ -2,6 +2,7 @@ using DocriderParser.Compilation;
 using DocriderParser.Models;
 using DocriderParser.Tokens;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DocriderParser
@@ -20,8 +21,11 @@ namespace DocriderParser
             var log = new CompilerLog();
             List<TokenizedLine> tokenizedLines = _parser.TokenizeFile(log, text);
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             var objectDefinitions = new StackObject();
-            var currentFrame = new StackFrame();
+            var currentFrame = new Compilation.StackFrame();
 
             foreach (var tokenizedLine in tokenizedLines)
             {
@@ -44,6 +48,9 @@ namespace DocriderParser
                         break;
                 }
             }
+
+            sw.Stop();
+            log.CompileTime = sw.ElapsedMilliseconds;
 
             return log;
         }
@@ -111,7 +118,7 @@ namespace DocriderParser
         private void CompileEntrance(
             StackObject objectDefinitions,
             CompilerLog log,
-            StackFrame currentFrame,
+            Compilation.StackFrame currentFrame,
             TokenizedLine tokenizedLine)
         {
             SyntaxTree tree = tokenizedLine.SyntaxTree;
@@ -211,7 +218,7 @@ namespace DocriderParser
 
         private void CompileExit(
             CompilerLog log,
-            StackFrame currentFrame,
+            Compilation.StackFrame currentFrame,
             TokenizedLine tokenizedLine)
         {
             SyntaxTree tree = tokenizedLine.SyntaxTree;
