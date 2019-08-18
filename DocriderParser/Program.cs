@@ -90,20 +90,29 @@ namespace DocriderParser
 
         private static void PrettyPrintCompilerLog(CompilerLog log)
         {
+            var lastBgColor = Console.BackgroundColor;
+            var lastFgColor = Console.ForegroundColor;
+
             foreach (var message in log.GetMessages())
             {
                 switch (message.Level)
                 {
                     case CompilerLevel.Debug:
-                        Console.WriteLine($"debug  [line#{message.LineNumber}] {message.Message}");
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+
+                        Console.WriteLine($"DBG [L#{message.LineNumber,3}] {message.Message}");
                         break;
 
                     case CompilerLevel.Info:
-                        Console.WriteLine($"info   [line#{message.LineNumber}] {message.Message}");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+
+                        Console.WriteLine($"INF [L#{message.LineNumber,3}] {message.Message}");
                         break;
 
                     case CompilerLevel.Warning:
-                        Console.WriteLine($"warn   [line#{message.LineNumber}] {message.Message}");
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+                        Console.WriteLine($"WRN [L#{message.LineNumber,3}] {message.Message}");
                         break;
 
                     case CompilerLevel.Error:
@@ -114,6 +123,9 @@ namespace DocriderParser
                             message.Message);
                         break;
                 }
+
+                Console.BackgroundColor = lastBgColor;
+                Console.ForegroundColor = lastFgColor;
             }
         }
 
@@ -192,10 +204,9 @@ namespace DocriderParser
             var lastBgColor = Console.BackgroundColor;
             var lastFgColor = Console.ForegroundColor;
 
-            Console.BackgroundColor = ConsoleColor.DarkRed;
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
 
-            Console.WriteLine($"error [line#{lineNumber}] Failed to parse line: {message}");
+            Console.WriteLine($"ERR [L#{lineNumber,3}] Failed to parse line: {message}");
 
             try
             {
