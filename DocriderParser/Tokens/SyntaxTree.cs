@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DocriderParser.Tokens
 {
     public enum Directive
@@ -26,17 +22,6 @@ namespace DocriderParser.Tokens
     {
         Capture,
         Dialogue,
-    }
-
-    public class SyntaxParseException : Exception
-    {
-        public readonly int Position;
-
-        public SyntaxParseException(string msg, int position)
-            : base(msg)
-        {
-            Position = position;
-        }
     }
 
     public struct SyntaxTree

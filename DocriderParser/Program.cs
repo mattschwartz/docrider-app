@@ -9,15 +9,40 @@ namespace DocriderParser
     {
         static void Main(string[] args)
         {
-            string[] fileText = File.ReadAllLines("Docrider.dr");
             var parser = new Parser();
+            var compiler = new Compiler(parser);
+
+            //string fileText = File.ReadAllText("Docrider.dr");
+
+            while (true)
+            {
+                Console.WriteLine("Enter file text (empty line to stop):");
+                string fileText = EnterFileText();
+                CompilerLog log = compiler.Compile(fileText);
+
+                PrettyPrintCompilerLog(log);
+            }
 
             //Loopy(parser);
+        }
 
-            foreach (var line in fileText)
+        private static string EnterFileText()
+        {
+            string result = "";
+
+            while (true)
             {
-                ParseLineAndPrint(parser, line);
+                string line = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    break;
+                }
+
+                result += line + "\n";
             }
+
+            return result;
         }
 
         private static void Loopy(Parser parser)
@@ -29,22 +54,46 @@ namespace DocriderParser
                 Console.WriteLine("Enter a line to parse:");
                 string line = Console.ReadLine();
 
-                ParseLineAndPrint(parser, line);
+                try
+                {
+                    SyntaxTree syntaxTree = parser.Tokenize(line);
+                    PrettyPrintSyntaxTree(syntaxTree);
+                }
+                catch (SyntaxParseException ex)
+                {
+                    PrettyPrintSyntaxError(line, ex);
+                }
 
                 Console.WriteLine();
             }
         }
 
-        private static void ParseLineAndPrint(Parser parser, string line)
+        private static void PrettyPrintCompilerLog(CompilerLog log)
         {
-            try
+            foreach (var message in log.GetMessages())
             {
-                SyntaxTree syntaxTree = parser.Tokenize(line);
-                PrettyPrintSyntaxTree(syntaxTree);
-            }
-            catch (SyntaxParseException ex)
-            {
-                PrettyPrintSyntaxError(line, ex);
+                switch (message.Level)
+                {
+                    case CompilerLevel.Debug:
+                        Console.WriteLine($"debug  [line#{message.LineNumber}] {message.Message}");
+                        break;
+
+                    case CompilerLevel.Info:
+                        Console.WriteLine($"info   [line#{message.LineNumber}] {message.Message}");
+                        break;
+
+                    case CompilerLevel.Warning:
+                        Console.WriteLine($"warn   [line#{message.LineNumber}] {message.Message}");
+                        break;
+
+                    case CompilerLevel.Error:
+                        PrettyPrintSyntaxError(
+                            message.Line,
+                            message.LineNumber,
+                            message.ColumnNumber,
+                            message.Message);
+                        break;
+                }
             }
         }
 
@@ -100,9 +149,20 @@ namespace DocriderParser
             }
         }
 
-        private static void PrettyPrintSyntaxError(string line, SyntaxParseException ex)
+
+        private static void PrettyPrintSyntaxError(
+            string line, SyntaxParseException ex)
         {
-            if (ex.Position < 0 || string.IsNullOrWhiteSpace(line))
+            PrettyPrintSyntaxError(line, 0, ex.Position, ex.Message);
+        }
+
+        private static void PrettyPrintSyntaxError(
+            string line,
+            int lineNumber,
+            int columnNumber,
+            string message)
+        {
+            if (columnNumber < 0 || string.IsNullOrWhiteSpace(line))
             {
                 return;
             }
@@ -114,7 +174,8 @@ namespace DocriderParser
 
             Console.BackgroundColor = ConsoleColor.DarkRed;
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"Failed to parse line: {ex.Message}");
+
+            Console.WriteLine($"error [line#{lineNumber}] Failed to parse line: {message}");
 
             try
             {
@@ -123,20 +184,20 @@ namespace DocriderParser
                     Console.BackgroundColor = ConsoleColor.Green;
                     Console.ForegroundColor = ConsoleColor.Black;
 
-                    string substr = line.Substring(0, ex.Position);
+                    string substr = line.Substring(0, columnNumber);
                     Console.Write(substr);
 
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(line[ex.Position]);
+                    Console.Write(line[columnNumber]);
 
                     Console.BackgroundColor = ConsoleColor.DarkRed;
                     Console.ForegroundColor = ConsoleColor.Gray;
 
-                    substr = line.Substring(ex.Position + 1);
+                    substr = line.Substring(columnNumber + 1);
                     Console.WriteLine(substr);
 
-                    string spacing = new string(' ', ex.Position);
+                    string spacing = new string(' ', columnNumber);
                     Console.WriteLine($"{spacing}^");
                 }
                 finally
