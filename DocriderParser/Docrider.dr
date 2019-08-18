@@ -4,3 +4,9 @@
 
 >> enter act => Act 1;
 >> enter scene => Scene 1;
+>> enter character => Evelynn;
+
+<< exit character => James;
+<< exit character => Evelynn;
+<< exit scene;
+<< exit act;

@@ -5,15 +5,11 @@ namespace DocriderParser.Tokens
     class RootTreeToken : ATokenizer
     {
         public RootTreeToken()
-            : base(new Regex(@"^(.*)$"),
-                new DirectiveTreeToken(),
+            : base(new Regex(""),
+                new DeclarativeTreeToken(),
+                new RevocativeTreeToken(),
                 new DialogueTreeToken())
         {
-        }
-
-        protected override string GetRemainingTokens(string line, Match foundMatch)
-        {
-            return base.GetRemainingTokens(line, foundMatch);
         }
 
         protected override SyntaxTree TokenizeInternal(SyntaxTree tree, string _1, Match _2)

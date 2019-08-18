@@ -7,7 +7,12 @@ namespace DocriderParser.Models
     {
         public string Name { get; }
         public Setting Setting { get; }
-        public List<Character> Characters { get; } 
+        public List<Character> Characters { get; } = new List<Character>();
+
+        public Scene(string name)
+        {
+            Name = name;
+        }
 
         internal Scene(SceneBuilder builder)
         {

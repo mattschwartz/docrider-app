@@ -5,7 +5,7 @@ namespace DocriderParser.Tokens
     class NarrativeDeclaredTypeTreeToken : ATokenizer
     {
         public NarrativeDeclaredTypeTreeToken()
-            : base(new Regex(@"(narrative) *", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^narrative *", RegexOptions.IgnoreCase),
                 new DefaultAssignmentOperatorTreeToken())
         {
         }
@@ -20,7 +20,7 @@ namespace DocriderParser.Tokens
     class CharacterDeclaredTypeTreeToken : ATokenizer
     {
         public CharacterDeclaredTypeTreeToken()
-            : base(new Regex(@"(character) *", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^character *", RegexOptions.IgnoreCase),
                 new DefaultAssignmentOperatorTreeToken())
         {
         }
@@ -35,7 +35,7 @@ namespace DocriderParser.Tokens
     class SettingDeclaredTypeTreeToken : ATokenizer
     {
         public SettingDeclaredTypeTreeToken()
-            : base(new Regex(@"(setting) *", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^setting *", RegexOptions.IgnoreCase),
                 new DefaultAssignmentOperatorTreeToken())
         {
         }
@@ -50,7 +50,7 @@ namespace DocriderParser.Tokens
     class ActDeclaredTypeTreeToken : ATokenizer
     {
         public ActDeclaredTypeTreeToken()
-            : base(new Regex(@"(act) *", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^act *", RegexOptions.IgnoreCase),
                 new DefaultAssignmentOperatorTreeToken())
         {
         }
@@ -65,7 +65,7 @@ namespace DocriderParser.Tokens
     class SceneDeclaredTypeTreeToken : ATokenizer
     {
         public SceneDeclaredTypeTreeToken()
-            : base(new Regex(@"(scene) *", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^scene *", RegexOptions.IgnoreCase),
                 new DefaultAssignmentOperatorTreeToken())
         {
         }

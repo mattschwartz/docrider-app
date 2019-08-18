@@ -72,7 +72,7 @@ namespace DocriderParser.Tokens
 
         protected virtual string GetRemainingTokens(string line, Match foundMatch)
         {
-            return line.Substring(foundMatch.Index);
+            return line.Substring(foundMatch.Length);
         }
 
         protected abstract SyntaxTree TokenizeInternal(

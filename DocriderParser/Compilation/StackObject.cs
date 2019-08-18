@@ -1,6 +1,7 @@
+using DocriderParser.Models;
 using System.Collections.Generic;
 
-namespace DocriderParser.Models
+namespace DocriderParser.Compilation
 {
     class StackObject
     {

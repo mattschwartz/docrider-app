@@ -1,7 +1,7 @@
+using DocriderParser.Compilation;
 using DocriderParser.Tokens;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace DocriderParser
 {
@@ -12,18 +12,38 @@ namespace DocriderParser
             var parser = new Parser();
             var compiler = new Compiler(parser);
 
-            //string fileText = File.ReadAllText("Docrider.dr");
+            Console.Write("[0] Compile test file\n[1] Interactive parser\n[2] Enter doc line by line in console\n> ");
+            int choice = int.Parse(Console.ReadLine());
 
-            while (true)
+            if (choice == 0)
             {
-                Console.WriteLine("Enter file text (empty line to stop):");
-                string fileText = EnterFileText();
-                CompilerLog log = compiler.Compile(fileText);
-
-                PrettyPrintCompilerLog(log);
+                CompileFile("Docrider.dr");
             }
+            else if (choice == 1)
+            {
+                Loopy(parser);
+            }
+            else if (choice == 2)
+            {
+                while (true)
+                {
+                    Console.WriteLine("Enter file text (empty line to stop):");
+                    string fileText = EnterFileText();
+                    CompilerLog log = compiler.Compile(fileText);
 
-            //Loopy(parser);
+                    PrettyPrintCompilerLog(log);
+                }
+            }
+        }
+
+        private static void CompileFile(string filename)
+        {
+            string fileText = File.ReadAllText(filename);
+            var parser = new Parser();
+            var compiler = new Compiler(parser);
+            CompilerLog log = compiler.Compile(fileText);
+
+            PrettyPrintCompilerLog(log);
         }
 
         private static string EnterFileText()

@@ -2,6 +2,7 @@ namespace DocriderParser.Tokens
 {
     public enum Directive
     {
+        None,
         Define,
         Enter,
         Exit,
@@ -11,6 +12,7 @@ namespace DocriderParser.Tokens
 
     public enum DeclaredType
     {
+        None,
         Narrative,
         Character,
         Setting,
@@ -20,7 +22,9 @@ namespace DocriderParser.Tokens
 
     public enum Declarative
     {
+        None,
         Capture,
+        Release,
         Dialogue,
     }
 

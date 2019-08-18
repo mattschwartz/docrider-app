@@ -1,95 +1,11 @@
+using DocriderParser.Compilation;
 using DocriderParser.Models;
 using DocriderParser.Tokens;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DocriderParser
 {
-    enum CompilerLevel
-    {
-        Debug,
-        Info,
-        Warning,
-        Error,
-    }
-
-    struct CompilerMessage
-    {
-        public CompilerLevel Level { get; private set; }
-        public string Line { get; private set; }
-        public int LineNumber { get; private set; }
-        public int ColumnNumber { get; private set; }
-        public string Message { get; private set; }
-
-        public CompilerMessage(
-            CompilerLevel level,
-            string line,
-            int lineNumber,
-            int columnNumber,
-            string message)
-        {
-            Level = level;
-            Line = line;
-            LineNumber = lineNumber;
-            ColumnNumber = columnNumber;
-            Message = message;
-        }
-    }
-
-    class CompilerLog
-    {
-        private readonly List<CompilerMessage> _messages = new List<CompilerMessage>();
-
-        public List<CompilerMessage> GetMessages() =>
-            _messages.ToList();
-
-        public void Debug(string line, int lineNumber, int column, string message)
-        {
-            _messages.Add(new CompilerMessage(
-                CompilerLevel.Debug,
-                line,
-                lineNumber,
-                column,
-                message));
-        }
-
-        public void Info(string line, int lineNumber, int column, string message)
-        {
-            _messages.Add(new CompilerMessage(
-                CompilerLevel.Info,
-                line,
-                lineNumber,
-                column,
-                message));
-        }
-
-        public void Warning(TokenizedLine tokenziedLine, string message) =>
-            Warning(tokenziedLine.Line, tokenziedLine.LineNumber, 0, message);
-        public void Warning(string line, int lineNumber, int column, string message)
-        {
-            _messages.Add(new CompilerMessage(
-                CompilerLevel.Warning,
-                line,
-                lineNumber,
-                column,
-                message));
-        }
-
-        public void Error(TokenizedLine tokenizedLine, string message) =>
-            Erorr(tokenizedLine.Line, tokenizedLine.LineNumber, 0, message);
-        public void Error(string line, int lineNumber, int column, string message)
-        {
-            _messages.Add(new CompilerMessage(
-                CompilerLevel.Error,
-                line,
-                lineNumber,
-                column,
-                message));
-        }
-    }
-
     class Compiler
     {
         private readonly Parser _parser;
@@ -105,33 +21,27 @@ namespace DocriderParser
             List<TokenizedLine> tokenizedLines = _parser.TokenizeFile(log, text);
 
             var objectDefinitions = new StackObject();
-            var stackFrames = new List<StackFrame>();
-
-            // build object model definitions
-            var lineDefinitions = tokenizedLines.Where(t => t.SyntaxTree.Directive == Directive.Define);
-            foreach (var tokenizedLine in lineDefinitions)
-            {
-                if (tokenizedLine.SyntaxTree.Directive == Directive.Define)
-                {
-                    CompileDefinition(objectDefinitions, tokenizedLine);
-                }
-            }
-
-            // lifecycle declarations, which describe entrances and exits
-
-            var lineDeclarations = tokenizedLines.Except(lineDefinitions);
-
             var currentFrame = new StackFrame();
-            foreach (var tokenizedLine in lineDeclarations)
+
+            foreach (var tokenizedLine in tokenizedLines)
             {
-                var directive = tokenizedLine.SyntaxTree.Directive;
-                if (directive == Directive.Enter)
+                switch (tokenizedLine.SyntaxTree.Directive)
                 {
-                    CompileEntrance(objectDefinitions, log, currentFrame, tokenizedLine);
-                }
-                else if (directive == Directive.Exit)
-                {
-                    CompileExit(log, currentFrame, tokenizedLine);
+                    case Directive.Define:
+                        CompileDefinition(log, objectDefinitions, tokenizedLine);
+                        break;
+
+                    case Directive.Enter:
+                        CompileEntrance(objectDefinitions, log, currentFrame, tokenizedLine);
+                        break;
+
+                    case Directive.Exit:
+                        CompileExit(log, currentFrame, tokenizedLine);
+                        break;
+
+                    default:
+                        log.Warning(tokenizedLine, $"Could not operate on unknown directive {tokenizedLine.SyntaxTree.Directive}.");
+                        break;
                 }
             }
 
@@ -144,7 +54,10 @@ namespace DocriderParser
         /// </summary>
         /// <param name="stack"></param>
         /// <param name="tokenizedLine"></param>
-        private void CompileDefinition(StackObject stack, TokenizedLine tokenizedLine)
+        private void CompileDefinition(
+            CompilerLog log,
+            StackObject stack,
+            TokenizedLine tokenizedLine)
         {
             SyntaxTree tree = tokenizedLine.SyntaxTree;
 
@@ -153,42 +66,45 @@ namespace DocriderParser
                 case DeclaredType.Narrative:
                     if (stack.Narrative != null)
                     {
-                        throw new InternalCompilerException(
-                            $"Only one narrative can be defined per file");
+                        log.Error(tokenizedLine, $"Cannot define additional narrative \"{tree.AssignedValue}\". Narrative \"{stack.Narrative.Name}\" already defined.");
+                    }
+                    else
+                    {
+                        stack.Narrative = new Narrative(tree.AssignedValue.ToString());
                     }
                     break;
 
                 case DeclaredType.Character:
-                    var character = new Character(tree.AssignedValue.ToString());
+                    var characterName = tree.AssignedValue.ToString();
+                    var characterToAdd = new Character(characterName);
 
-                    if (stack.Characters.Any(t => t == character))
+                    if (stack.Characters.Contains(characterToAdd))
                     {
-                        throw new InternalCompilerException($"Duplicate Character definition for {character.Name}");
+                        log.Error(tokenizedLine, $"Duplicate Character definition for \"{characterName}\".");
                     }
                     else
                     {
-                        stack.Characters.Add(character);
+                        stack.Characters.Add(characterToAdd);
                     }
-
                     break;
 
                 case DeclaredType.Setting:
-                    var setting = new Setting(tree.AssignedValue.ToString());
-                    if (stack.Settings.Any(t => t == setting))
+                    var settingName = tree.AssignedValue.ToString();
+                    var setting = new Setting(settingName);
+
+                    if (stack.Settings.Contains(setting))
                     {
-                        throw new InternalCompilerException(
-                            $"Duplicate Setting definition for {setting.Name}");
+                        log.Error(tokenizedLine, $"Duplicate Setting definition for \"{setting.Name}\".");
                     }
                     else
                     {
                         stack.Settings.Add(setting);
                     }
-
                     break;
 
                 default:
-                    throw new InternalCompilerException(
-                        $"Cannot define declared type {tree.DeclaredType}");
+                    log.Error(tokenizedLine, $"Cannot define declared type {tree.DeclaredType}");
+                    break;
             }
         }
 
@@ -208,18 +124,19 @@ namespace DocriderParser
                     {
                         log.Error(tokenizedLine, $"Cannot enter act with name \"{actName}\" when already in act \"{currentFrame.Act.Name}\".");
                     }
-
-                    var actToEnter = new Act(actName);
-                    if (objectDefinitions.Acts.Contains(actToEnter))
-                    {
-                        log.Error(tokenizedLine, $"Cannot re-enter act with name \"{actName}\".");
-                    }
                     else
                     {
-                        objectDefinitions.Acts.Add(actToEnter);
-                        currentFrame.Act = actToEnter;
+                        var actToEnter = new Act(actName);
+                        if (objectDefinitions.Acts.Contains(actToEnter))
+                        {
+                            log.Error(tokenizedLine, $"Cannot re-enter act with name \"{actName}\".");
+                        }
+                        else
+                        {
+                            objectDefinitions.Acts.Add(actToEnter);
+                            currentFrame.Act = actToEnter;
+                        }
                     }
-
                     break;
 
                 case DeclaredType.Scene:
@@ -228,18 +145,20 @@ namespace DocriderParser
                     {
                         log.Error(tokenizedLine, $"Cannot enter scene with name \"{sceneName}\" when already in scene \"{currentFrame.Scene.Name}\".");
                     }
-
-                    var sceneToEnter = new Scene(sceneName);
-                    if (objectDefinitions.Scenes.Contains(sceneToEnter))
-                    {
-                        log.Error(tokenizedLine, $"Cannot re-enter scene with name \"{sceneName}\".");
-                    }
                     else
                     {
-                        objectDefinitions.Scenes.Add(sceneToEnter);
-                        currentFrame.Scene = sceneToEnter;
+                        var sceneToEnter = new Scene(sceneName);
+                        if (objectDefinitions.Scenes.Contains(sceneToEnter))
+                        {
+                            log.Error(tokenizedLine, $"Cannot re-enter scene with name \"{sceneName}\".");
+                        }
+                        else
+                        {
+                            log.Debug(tokenizedLine, $"Entered scene \"{sceneName}\"");
+                            objectDefinitions.Scenes.Add(sceneToEnter);
+                            currentFrame.Scene = sceneToEnter;
+                        }
                     }
-
                     break;
 
                 case DeclaredType.Character:
@@ -250,17 +169,19 @@ namespace DocriderParser
                     {
                         log.Error(tokenizedLine, $"Cannot enter undefined character \"{characterName}\".");
                     }
-
-                    var currentScene = currentFrame.Scene;
-                    if (currentScene == null)
-                    {
-                        log.Error(tokenizedLine, $"Cannot enter character \"{characterName}\" outside of a scene. Please enter a scene first.");
-                    }
                     else
                     {
-                        currentScene.Characters.Add(character);
+                        var currentScene = currentFrame.Scene;
+                        if (currentScene == null)
+                        {
+                            log.Error(tokenizedLine, $"Cannot enter character \"{characterName}\" outside of a scene. Please enter a scene first.");
+                        }
+                        else
+                        {
+                            log.Debug(tokenizedLine, $"Entered Character \"{characterName}\"");
+                            currentScene.Characters.Add(character);
+                        }
                     }
-
                     break;
 
                 case DeclaredType.Setting:
@@ -271,6 +192,17 @@ namespace DocriderParser
                     {
                         log.Error(tokenizedLine, $"Cannot enter undefined setting \"{settingName}\".");
                     }
+                    else
+                    {
+                        if (currentFrame.Setting != null)
+                        {
+                            log.Warning(tokenizedLine, $"Switching setting to \"{settingName}\" from current setting \"{currentFrame.Setting.Name}\".");
+                        }
+
+                        log.Debug(tokenizedLine, $"Entered setting \"{settingName}\"");
+                        currentFrame.Setting = setting;
+                    }
+                    break;
 
                 default:
                     throw new InternalCompilerException($"Cannot enter declared type {tree.DeclaredType}");
@@ -287,56 +219,56 @@ namespace DocriderParser
             switch (tree.DeclaredType)
             {
                 case DeclaredType.Act:
-                    var actName = tree.AssignedValue.ToString();
                     if (currentFrame.Act == null)
                     {
-                        log.Error(tokenizedLine, $"Attempted to exit act \"{actName}\" which was never entered.");
-                    }
-                    else if (currentFrame.Act.Name != actName)
-                    {
-                        log.Error(tokenizedLine, $"Attempted to exit act \"{actName}\", but expected to exit current act with name \"{currentFrame.Act.Name}\".");
+                        log.Warning(tokenizedLine, $"Attempted to exit act but currently not in an act.");
                     }
                     else
                     {
+                        log.Debug(tokenizedLine, $"Exiting act \"{currentFrame.Act.Name}\"");
                         currentFrame.Act = null;
                     }
 
                     break;
 
                 case DeclaredType.Scene:
-                    var sceneName = tree.AssignedValue.ToString();
                     if (currentFrame.Scene == null)
                     {
-                        log.Error(tokenizedLine, $"Attempted to exit scene \"{sceneName}\" which was never entered.");
+                        log.Warning(tokenizedLine, $"Attempted to exit scene but currently not in a scene.");
                     }
-                    else if (currentFrame.Scene.Name != sceneName)
-                    {
-                        log.Error(tokenizedLine, $"Attempted to exit act \"{sceneName}\", but expected to exit current act with name \"{currentFrame.Scene.Name}\".");
-                    }
-                    else if (currentFrame.Characters.Count != 0)
+                    else if (currentFrame.Scene.Characters.Count != 0)
                     {
                         log.Warning(tokenizedLine, "Exiting scene with characters present will exeunt all characters. Did you mean to do this?");
-
-                        currentFrame.Characters.Clear();
                         currentFrame.Scene = null;
                     }
                     else
                     {
+                        log.Debug(tokenizedLine, $"Exiting scene \"{currentFrame.Scene.Name}\"");
                         currentFrame.Scene = null;
                     }
                     break;
 
                 case DeclaredType.Character:
                     var characterName = tree.AssignedValue.ToString();
-                    var characterToExit = currentFrame.Characters.SingleOrDefault(t => t.Name == characterName);
 
-                    if (characterToExit == null)
+                    if (currentFrame.Scene == null)
                     {
-                        log.Warning(tokenizedLine, $"Attempted to exit character \"{characterName}\" which was not present in scene.");
+                        log.Error(tokenizedLine, $"Cannot exit character outside of scene. Please enter a scene first.");
                     }
                     else
                     {
-                        currentFrame.Characters.Remove(characterToExit);
+                        Character characterToExit = currentFrame.Scene.Characters
+                            .SingleOrDefault(t => t.Name == characterName);
+
+                        if (characterToExit == null)
+                        {
+                            log.Warning(tokenizedLine, $"Attempted to exit character \"{characterName}\" who was not present in scene.");
+                        }
+                        else
+                        {
+                            log.Debug(tokenizedLine, $"Exiting character \"{characterName}\"");
+                            currentFrame.Scene.Characters.Remove(characterToExit);
+                        }
                     }
 
                     break;
@@ -354,6 +286,7 @@ namespace DocriderParser
                     }
                     else
                     {
+                        log.Debug(tokenizedLine, $"Exiting setting \"{settingName}\"");
                         currentFrame.Setting = null;
                     }
 
