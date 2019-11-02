@@ -76,4 +76,26 @@ namespace DocriderParser.Tokens
             return tree;
         }
     }
+
+    class SceneWithCharactersDeclaredTypeTreeToken : ATokenizer
+    {
+        public SceneWithCharactersDeclaredTypeTreeToken()
+            : base(new Regex(@"^scene +with +\[([\w ,]+)\] *", RegexOptions.IgnoreCase),
+                new DefaultAssignmentOperatorTreeToken())
+        {
+        }
+
+        public override Match CanTokenize(string line)
+        {
+            var match = _tokenMatcher.Match(line);
+            return match;
+        }
+
+        protected override SyntaxTree TokenizeInternal(SyntaxTree tree, string line, Match foundMatch)
+        {
+            tree.AssignedValue = "Huh?";
+            tree.DeclaredType = DeclaredType.Scene;
+            return tree;
+        }
+    }
 }

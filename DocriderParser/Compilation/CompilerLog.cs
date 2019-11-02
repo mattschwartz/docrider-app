@@ -45,8 +45,8 @@ namespace DocriderParser.Compilation
         public List<CompilerMessage> GetMessages() =>
             _messages.ToList();
 
-        public void Debug(TokenizedLine tokenziedLine, string message) =>
-            Debug(tokenziedLine.Line, tokenziedLine.LineNumber, 0, message);
+        public void Debug(TokenizedLine tokenizedLine, string message) =>
+            Debug(tokenizedLine.Line, tokenizedLine.LineNumber, tokenizedLine.Line?.Length ?? 0, message);
         public void Debug(string line, int lineNumber, int column, string message)
         {
             _messages.Add(new CompilerMessage(
@@ -67,8 +67,8 @@ namespace DocriderParser.Compilation
                 message));
         }
 
-        public void Warning(TokenizedLine tokenziedLine, string message) =>
-            Warning(tokenziedLine.Line, tokenziedLine.LineNumber, 0, message);
+        public void Warning(TokenizedLine tokenizedLine, string message) =>
+            Warning(tokenizedLine.Line, tokenizedLine.LineNumber, tokenizedLine.Line?.Length ?? 0, message);
         public void Warning(string line, int lineNumber, int column, string message)
         {
             _messages.Add(new CompilerMessage(
@@ -80,7 +80,7 @@ namespace DocriderParser.Compilation
         }
 
         public void Error(TokenizedLine tokenizedLine, string message) =>
-            Error(tokenizedLine.Line, tokenizedLine.LineNumber, 0, message);
+            Error(tokenizedLine.Line, tokenizedLine.LineNumber, tokenizedLine.Line?.Length ?? 0, message);
         public void Error(string line, int lineNumber, int column, string message)
         {
             _messages.Add(new CompilerMessage(

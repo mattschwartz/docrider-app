@@ -6,7 +6,7 @@ namespace DocriderParser.Tokens
     class DefineDirectiveTreeToken : ATokenizer
     {
         public DefineDirectiveTreeToken()
-            : base(new Regex(@"^(define) +", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^define +", RegexOptions.IgnoreCase),
                 new NarrativeDeclaredTypeTreeToken(),
                 new CharacterDeclaredTypeTreeToken(),
                 new SettingDeclaredTypeTreeToken())
@@ -23,10 +23,11 @@ namespace DocriderParser.Tokens
     class EnterDirectiveTreeToken : ATokenizer
     {
         public EnterDirectiveTreeToken()
-            : base(new Regex(@"^(enter) +", RegexOptions.IgnoreCase),
+            : base(new Regex(@"^enter +", RegexOptions.IgnoreCase),
                 new CharacterDeclaredTypeTreeToken(),
                 new SettingDeclaredTypeTreeToken(),
                 new ActDeclaredTypeTreeToken(),
+                new SceneWithCharactersDeclaredTypeTreeToken(),
                 new SceneDeclaredTypeTreeToken())
         {
         }
@@ -41,7 +42,7 @@ namespace DocriderParser.Tokens
     class AliasDirectiveTreeToken : ATokenizer
     {
         public AliasDirectiveTreeToken()
-            : base(new Regex(@"^(alias) +", RegexOptions.IgnoreCase))
+            : base(new Regex(@"^alias +", RegexOptions.IgnoreCase))
         {
         }
 

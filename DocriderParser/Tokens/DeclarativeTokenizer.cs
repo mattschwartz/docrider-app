@@ -5,7 +5,7 @@ namespace DocriderParser.Tokens
     class DeclarativeTreeToken : ATokenizer
     {
         public DeclarativeTreeToken()
-            : base(new Regex(@"^ *>> *(\w+ +\w+ *=> *[\w ]+;)$"),
+            : base(new Regex(@"^ *>> *(\w+ +\w+ *( with \[[\w, ]+\] *)?=> *[\w ]+;)$"),
                 new DefineDirectiveTreeToken(),
                 new EnterDirectiveTreeToken(),
                 new AliasDirectiveTreeToken())
