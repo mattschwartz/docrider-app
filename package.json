@@ -266,7 +266,7 @@
     "history": "^4.7.2",
     "js-yaml": "3.13.1",
     "just-extend": "4.0.0",
-    "lodash": "4.17.13",
+    "lodash": "4.17.19",
     "lodash.mergewith": "4.6.2",
     "react": "16.9.0",
     "react-dom": "^16.6.3",
