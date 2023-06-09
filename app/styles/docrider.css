@@ -1,27 +1,24 @@
 .docrider {
-  color: #8bbe32;
-  width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-
-  .controlsContainer {
+    color: #8bbe32;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.docrider .controlsContainer {
     flex: 0;
     background-color: #2d3047;
     color: #101010;
     position: relative;
     border-bottom: 1px solid black;
-  }
-
-  .btnGroup {
+}
+.docrider .btnGroup {
     margin: 0.5rem;
-
-    > button {
-      margin-right: 0.5rem;
-    }
-  }
-
-  button {
+}
+.docrider .btnGroup > button {
+    margin-right: 0.5rem;
+}
+.docrider button {
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
     position: relative;
@@ -35,21 +32,18 @@
     font-family: inherit;
     font-weight: inherit;
     font-size: 1.2rem;
-
-    &:hover {
-      background-color: #a1d449;
-      transform: translateY(-1px);
-      background-color: #deb841;
-    }
-  }
-
-  > .docviewControls {
+}
+.docrider button:hover {
+    background-color: #a1d449;
+    transform: translateY(-1px);
+    background-color: #deb841;
+}
+.docrider > .docviewControls {
     padding: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     position: relative;
-  }
-
-  > .editable {
+}
+.docrider > .editable {
     background-color: red;
     padding: 0;
     margin: 0;
@@ -72,14 +66,11 @@
     box-sizing: border-box;
     resize: none;
     overflow-y: auto;
-
-    &:not(:focus) {
-      background: #101010;
-      color: #bebebe;
-    }
-
-    &:not(:focus):hover {
-      color: #a1c06b;
-    }
-  }
+}
+.docrider > .editable:not(:focus) {
+    background: #101010;
+    color: #bebebe;
+}
+.docrider > .editable:not(:focus):hover {
+    color: #a1c06b;
 }

@@ -1,0 +1,81 @@
+.docinsMenu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0.5rem;
+    z-index: 1;
+}
+
+.docinsMenu .dropdownMenu {
+    display: none;
+}
+
+.docinsMenu:hover .dropdownMenu {
+    display: inherit;
+}
+
+.docinsMenu div.dropdownButton {
+    width: 12rem;
+    height: 100%;
+    background-color: #a88e84;
+    color: #000500;
+    letter-spacing: 0.25ch;
+    text-align: left;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: 1.2rem;
+    padding-left: 0.5ch;
+    border: 1px solid #202020;
+    outline: 0;
+    cursor: pointer;
+    transition: background-position 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+}
+
+.docinsMenu:hover {
+    background-color: #deb841;
+}
+
+.docinsMenu .dropdownMenu {
+    background-color: #a88e84;
+    border: 1px solid black;
+    border-top: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 1), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.docinsMenu .dropdownMenu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.docinsMenu .dropdownMenu ul li {
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    padding: 0.5ch;
+    cursor: pointer;
+}
+
+.docinsMenu .dropdownMenu ul li > i {
+    float: right;
+}
+
+.docinsMenu .dropdownMenu ul li:hover {
+    background-color: #deb841;
+}
+
+.docinsMenu .dropdownIcon {
+    float: right;
+}
+
+.docinsMenu .dropdownIcon > i {
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.docinsMenu:hover .dropdownIcon > i {
+    transform: scaleY(-1);
+}
+
+.docinsMenu:hover + .docinsDropdown {
+    display: initial;
+}
